@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Roger Bavibidila - Portfolio",
   description: "Full Stack Developer and Machine Learning Engineer specializing in AI, Deep Learning, and Scalable Web Applications",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 // Lazy load the AI Assistant component
