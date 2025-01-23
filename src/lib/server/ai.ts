@@ -2,20 +2,20 @@ import OpenAI from 'openai';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-if (!process.env.OPENAI_API_KEY || !process.env.ANTHROPIC_API_KEY || !process.env.GOOGLE_API_KEY) {
+if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY || !process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY || !process.env.NEXT_PUBLIC_GOOGLE_API_KEY) {
     throw new Error("Missing required API keys in environment variables.");
   }
   
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!
 });
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!
+  apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY!
 });
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_API_KEY!);
 
 export async function generateAIResponse(content: string, modelId: string) {
     console.log('AI Model:', modelId);

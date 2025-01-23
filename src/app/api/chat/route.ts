@@ -1,3 +1,4 @@
+"use server";
 import { NextRequest, NextResponse } from 'next/server';
 import { generateAIResponse } from '@/lib/server/ai';
 import { prisma } from "@/lib/db";
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
      return NextResponse.json({ error: "Missing content or modelId" }, { status: 400 });
    }
 
-   await prisma.chatMessage.create({
+   const chatMessage = await prisma.chatMessage.create({
      data: {
        content,
        model: modelId,
@@ -19,6 +20,8 @@ export async function POST(req: NextRequest) {
        type: 'user'
      }
    });
+
+   console.log('Chat Message:', chatMessage);
 
    const aiResponse = await generateAIResponse(content, modelId);
    
