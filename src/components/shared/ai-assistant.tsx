@@ -105,13 +105,16 @@ useEffect(() => {
 
   if (!isOpen) {
     return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 rounded-full p-4 bg-primary hover:bg-primary/90"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
-    );
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-4 right-4 rounded-full p-4 bg-emerald-500 hover:bg-emerald-600"
+        >
+          <div className="relative">
+            <MessageCircle className="h-6 w-6" />
+            <Bot className="h-4 w-4 absolute -top-2 -right-2 bg-white rounded-full p-0.5 text-emerald-500" />
+          </div>
+        </Button>
+      );
   }
 
   const renderMessageIcon = (type: string) => {

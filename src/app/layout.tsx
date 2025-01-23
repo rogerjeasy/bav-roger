@@ -42,8 +42,11 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen pt-16">
             {children}
-            <AIAssistant />
+            
           </main>
+          <div className="fixed bottom-0 right-0 z-50">
+            <AIAssistant />
+          </div>
           <Footer/>
           <Toaster />
         </ThemeProvider>
