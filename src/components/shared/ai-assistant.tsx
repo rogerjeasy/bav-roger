@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Maximize2, Minimize2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import { MessageCircle, X, Send, Maximize2, Minimize2, User, Cpu, Bot } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,9 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { AI_MODELS } from '@/lib/constants';
-import { scrollToBottom } from '@/lib/utils/index';
-import type { ChatMessage } from '@/types/chat-message';
+import { AI_MODELS } from "@/lib/constants";
+import { scrollToBottom } from "@/lib/utils/index";
+import type { ChatMessage } from "@/types/chat-message";
 
 interface AIMessage extends ChatMessage {
   id: string;
@@ -25,65 +25,79 @@ interface AIMessage extends ChatMessage {
 const AIChat = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState<string>('');
-  const [selectedModel, setSelectedModel] = useState<string>('gpt-4');
+  const [inputMessage, setInputMessage] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState<string>("gpt-4");
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    scrollToBottom(scrollRef.current);
-  }, [messages]);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+useEffect(() => {
+  if (isOpen || messages.length > 0) {
+    const timer = setTimeout(() => {
+      const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+      if (viewport) {
+        viewport.scrollTop = viewport.scrollHeight;
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }
+}, [isOpen, messages]);
 
   const handleSend = async () => {
     if (!inputMessage.trim()) return;
     
     const newMessage: ChatMessage = {
-      type: 'user',
+      type: "user",
       content: inputMessage,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
-
-    setMessages(prev => [...prev, newMessage]);
-    setInputMessage('');
-
-    console.log('Selected Model:', selectedModel);
-
+    
+    setMessages((prev) => [...prev, newMessage]);
+    setInputMessage("");
+    setIsLoading(true);
+   
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/chat", {
+        method: "POST", 
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           content: inputMessage,
-          modelId: selectedModel
+          modelId: selectedModel,
         }),
       });
-
-      if (!response.ok) throw new Error('Failed to send message');
-
-      const systemMessage: ChatMessage = {
-        type: 'system',
-        content: `Using ${AI_MODELS.find(m => m.id === selectedModel)?.name}`,
-        createdAt: new Date()
+   
+      if (!response.ok) throw new Error("Failed to send message");
+      
+      const { message } = await response.json();
+      
+      const aiMessage: ChatMessage = {
+        type: "assistant",
+        content: message,
+        createdAt: new Date(),
       };
-
-      setMessages(prev => [...prev, systemMessage]);
+   
+      setMessages((prev) => [...prev, aiMessage]);
+   
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+   };
 
   const handleModelChange = (value: string) => {
     setSelectedModel(value);
     const systemMessage: ChatMessage = {
-      type: 'system',
-      content: `Switched to ${AI_MODELS.find(m => m.id === value)?.name}`,
-      createdAt: new Date()
+      type: "system",
+      content: `Switched to ${AI_MODELS.find((m) => m.id === value)?.name}`,
+      createdAt: new Date(),
     };
-    setMessages(prev => [...prev, systemMessage]);
+    setMessages((prev) => [...prev, systemMessage]);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -91,7 +105,7 @@ const AIChat = () => {
 
   if (!isOpen) {
     return (
-      <Button 
+      <Button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 rounded-full p-4 bg-primary hover:bg-primary/90"
       >
@@ -100,10 +114,29 @@ const AIChat = () => {
     );
   }
 
+  const renderMessageIcon = (type: string) => {
+    switch(type) {
+      case "user":
+        return <div className="bg-emerald-100 p-2 rounded-full">
+          <User className="h-4 w-4 text-emerald-600" />
+        </div>;
+      case "assistant":
+        return <div className="bg-indigo-100 p-2 rounded-full">
+          <Bot className="h-4 w-4 text-indigo-600" />
+        </div>;
+      default:
+        return <div className="bg-gray-100 p-2 rounded-full">
+          <Cpu className="h-4 w-4 text-gray-600" />
+        </div>;
+    }
+   };
+
   return (
-    <Card className={`fixed bottom-4 right-4 bg-background border shadow-lg transition-all duration-300 ${
-      isMinimized ? 'w-72 h-14' : 'w-80 sm:w-96 h-[600px]'
-    }`}>
+    <Card
+      className={`fixed bottom-4 right-4 bg-background border shadow-lg transition-all duration-300 ${
+        isMinimized ? "w-72 h-14" : "w-80 sm:w-96 h-[600px]"
+      }`}
+    >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
@@ -116,13 +149,13 @@ const AIChat = () => {
               size="icon"
               onClick={() => setIsMinimized(!isMinimized)}
             >
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              {isMinimized ? (
+                <Maximize2 className="h-4 w-4" />
+              ) : (
+                <Minimize2 className="h-4 w-4" />
+              )}
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(false)}
-            >
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -136,7 +169,7 @@ const AIChat = () => {
                   <SelectValue placeholder="Select AI Model" />
                 </SelectTrigger>
                 <SelectContent>
-                  {AI_MODELS.map(model => (
+                  {AI_MODELS.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
                       {model.name}
                     </SelectItem>
@@ -146,26 +179,44 @@ const AIChat = () => {
             </div>
 
             <div className="flex-1 overflow-hidden">
-              <ScrollArea className="h-[400px]">
-                <div ref={scrollRef} className="flex flex-col space-y-4 p-4">
+                <ScrollArea ref={scrollAreaRef} className="h-[400px]">
+                <div className="flex flex-col space-y-4 p-4">
                   {messages.map((message, index) => (
                     <div
-                      key={index}
-                      className={`flex ${
-                        message.type === 'user' ? 'justify-end' : 'justify-start'
-                      }`}
-                    >
+                    key={index}
+                    className={`flex flex-col ${
+                      message.type === "user" ? "items-end" : "items-start"
+                    } mb-4`}
+                   >
+                    <div className={`flex items-start ${
+                      message.type === "user" ? "flex-row-reverse" : "flex-row"
+                    } space-x-2`}>
+                      {renderMessageIcon(message.type)}
                       <div
                         className={`max-w-[80%] rounded-lg p-3 ${
-                          message.type === 'user'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted'
+                          message.type === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
                         }`}
                       >
-                        {message.content}
+                        <p>{message.content}</p>
+                        <span className="text-xs text-muted-foreground">
+                          {(message.createdAt ?? new Date()).toLocaleTimeString()}
+                        </span>
                       </div>
                     </div>
+                   </div>
                   ))}
+                  {isLoading && (
+                    <div className="flex justify-start">
+                      <div className="flex items-center space-x-2">
+                        <Cpu className="h-4 w-4 text-secondary" />
+                        <div className="max-w-[80%] rounded-lg p-3 bg-muted">
+                          <p className="animate-pulse">Thinking...</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </div>
