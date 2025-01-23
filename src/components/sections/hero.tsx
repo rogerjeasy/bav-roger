@@ -1,12 +1,37 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useState, useEffect } from "react"
+
+const images = [
+  {
+    src: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=3540&auto=format&fit=crop",
+    alt: "Programming setup with modern laptop"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1503252947848-7338d3f92f31?q=80&w=3540&auto=format&fit=crop",
+    alt: "Code on screen"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=3540&auto=format&fit=crop",
+    alt: "Modern development environment"
+  }
+]
 
 export default function HeroSection() {
+  const [currentImage, setCurrentImage] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -101,19 +126,33 @@ export default function HeroSection() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className="relative h-[600px] w-full">
-              <Image
-                src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=3540&auto=format&fit=crop"
-                alt="Programming setup with modern laptop"
-                fill
-                className="object-cover"
-                priority
-              />
+            <div className="relative h-[600px] w-full rounded-2xl overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentImage}
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.7 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={images[currentImage].src}
+                    alt={images[currentImage].alt}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+
               {/* Floating elements animation */}
               <motion.div
                 className="absolute top-1/4 -left-4 w-8 h-8 bg-primary/10 rounded-full"
                 animate={{
                   y: [0, 20, 0],
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 180, 360],
                 }}
                 transition={{
                   duration: 4,
@@ -125,9 +164,24 @@ export default function HeroSection() {
                 className="absolute bottom-1/4 -right-4 w-12 h-12 bg-primary/20 rounded-full"
                 animate={{
                   y: [0, -30, 0],
+                  scale: [1, 1.2, 1],
+                  rotate: [360, 180, 0],
                 }}
                 transition={{
                   duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              <motion.div
+                className="absolute top-1/2 right-1/4 w-6 h-6 bg-primary/15 rounded-full"
+                animate={{
+                  x: [0, 20, 0],
+                  y: [0, -20, 0],
+                  scale: [1, 1.3, 1],
+                }}
+                transition={{
+                  duration: 6,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}

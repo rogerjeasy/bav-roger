@@ -27,7 +27,7 @@ export default function AboutSection() {
           variants={fadeInUp}
         >
           <Image
-            src="/about-image.jpg"
+            src="/assets/roger-profile.png"
             alt="Roger Bavibidila"
             fill
             className="object-cover"
