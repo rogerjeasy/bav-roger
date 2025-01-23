@@ -39,3 +39,12 @@ model Contact {
   message   String    @db.Text
   createdAt DateTime  @default(now())
 }
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  model     String
+  role      String  
+  type      String   // 'user', 'system', or 'assistant'
+  createdAt DateTime @default(now())
+}

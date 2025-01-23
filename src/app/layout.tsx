@@ -5,6 +5,7 @@ import { Navbar } from "@/components/shared/navbar";
 import "./globals.css";
 import Footer from "@/components/shared/footer";
 import { Toaster } from "@/components/ui/toaster"
+import React from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +21,9 @@ export const metadata: Metadata = {
   title: "Roger Bavibidila - Portfolio",
   description: "Full Stack Developer and Machine Learning Engineer specializing in AI, Deep Learning, and Scalable Web Applications",
 };
+
+// Lazy load the AI Assistant component
+const AIAssistant = React.lazy(() => import("@/components/shared/ai-assistant"));
 
 export default function RootLayout({
   children,
@@ -38,6 +42,7 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen pt-16">
             {children}
+            <AIAssistant />
           </main>
           <Footer/>
           <Toaster />
