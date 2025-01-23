@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useAnimation } from "framer-motion"
+import { motion } from "framer-motion"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"

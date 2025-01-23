@@ -65,11 +65,19 @@ const ContactSection = () => {
       });
       form.reset();
     } catch (error) {
-      toast({
-        title: "Error sending message",
-        description: "Please try again later.",
-        variant: "destructive"
-      });
+        if (error instanceof Error) {
+          toast({
+            title: "Error sending message",
+            description: error.message || "Please try again later.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error sending message",
+            description: "An unknown error occurred. Please try again later.",
+            variant: "destructive",
+          });
+        }
     } finally {
       setIsSubmitting(false);
     }
@@ -95,10 +103,10 @@ const ContactSection = () => {
         >
           <MessageSquare className="w-16 h-16 mx-auto mb-6 text-white animate-bounce" />
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Let's Connect
+            Let&apos;s Connect
           </h2>
           <p className="text-gray-200 max-w-2xl mx-auto">
-            Have a project in mind? I'd love to hear about it.
+            Have a project in mind? I&apos;d love to hear about it.
           </p>
         </motion.div>
 

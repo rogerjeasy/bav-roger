@@ -53,7 +53,7 @@ export default function AboutSection() {
           <motion.div variants={fadeInUp} className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tight">About Me</h2>
             <p className="text-lg text-muted-foreground">
-              I'm a Full Stack Developer with a strong background in AI and Machine Learning. 
+              I&apos;m a Full Stack Developer with a strong background in AI and Machine Learning. 
               Currently pursuing my MSc in Applied Information and Data Science at Lucerne University, 
               I combine theoretical knowledge with practical experience in building innovative web solutions.
             </p>

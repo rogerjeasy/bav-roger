@@ -14,13 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 import { AI_MODELS } from "@/lib/constants";
-import { scrollToBottom } from "@/lib/utils/index";
 import type { ChatMessage } from "@/types/chat-message";
-
-interface AIMessage extends ChatMessage {
-  id: string;
-  createdAt: Date;
-}
 
 const AIChat = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

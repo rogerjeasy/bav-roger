@@ -92,7 +92,7 @@ const HeroSection: React.FC = () => {
           <div className="max-w-2xl space-y-8 backdrop-blur-sm bg-black/20 p-8 rounded-2xl">
             <motion.div variants={itemVariants} className="inline-block">
               <span className="px-6 py-2 rounded-full bg-primary/20 text-primary font-medium border border-primary/20">
-                Full Stack Developer
+                Full Stack Developer and Machine Learning Engineer
               </span>
             </motion.div>
 
@@ -100,7 +100,7 @@ const HeroSection: React.FC = () => {
               variants={itemVariants}
               className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white"
             >
-              Hi, I'm Roger Bavibidila
+              Hi, I&apos;m Roger Bavibidila
             </motion.h1>
 
             <motion.p

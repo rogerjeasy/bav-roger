@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
      return NextResponse.json({ error: "Missing content or modelId" }, { status: 400 });
    }
 
-   const chatMessage = await prisma.chatMessage.create({
+   await prisma.chatMessage.create({
      data: {
        content,
        model: modelId,
